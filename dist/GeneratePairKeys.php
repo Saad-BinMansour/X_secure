@@ -30,7 +30,6 @@
 
 
         $sql_query = "UPDATE users SET PublicKey = '$publicKey' WHERE username = '$username'"; 
-
         $query_result= mysqli_query($connection,$sql_query);
         
         if($query_result)
@@ -42,11 +41,8 @@
         header("Location: home.php");
         die;
         }else{
-          echo("<script>alert('There is a problem with insert to database!!')</script>");
+          echo("<script>alert('There is a problem with insert to the database!!')</script>");
         }
-    
-
-
     }
 
 

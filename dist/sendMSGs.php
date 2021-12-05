@@ -19,6 +19,7 @@
         //generate Random key to encrypt 
         $Encryption_random_key=openssl_random_pseudo_bytes(80);
 
+
         // Generate an initialization vector 
         $iv_size = openssl_cipher_iv_length($TypeOfcipher); 
         $iv = openssl_random_pseudo_bytes($iv_size); 
@@ -36,14 +37,17 @@
           $query_result=mysqli_fetch_assoc($query_result);
           $user_publickey= $query_result['PublicKey'];
           
+          //Encrypt the shared random key($Encryption_random_key) and store it in $Encrypted_Key by using the recevier Public Key ($user_publickey)
           openssl_public_encrypt ($Encryption_random_key, $Encrypted_Key , $user_publickey, OPENSSL_PKCS1_PADDING);	
           openssl_public_encrypt ($iv, $Encrypted_Iv , $user_publickey, OPENSSL_PKCS1_PADDING);	
 
+
+          //To shorten the encrypted key ()
           $Encrypted_Key=base64_encode($Encrypted_Key);
           $Encrypted_Iv=base64_encode($Encrypted_Iv);
 
 
-            $sql_query= "INSERT INTO `user_messages` (`id`, `username`, `user_message`, `msg_from`, `msg_key`, `msg_iv`) VALUES (NULL, '$send_to_user', '$encrypted_message', '$username', '$Encrypted_Key', '$Encrypted_Iv' )";
+          $sql_query= "INSERT INTO `user_messages` (`id`, `username`, `user_message`, `msg_from`, `msg_key`, `msg_iv`) VALUES (NULL, '$send_to_user', '$encrypted_message', '$username', '$Encrypted_Key', '$Encrypted_Iv' )";
 
           $query_result= mysqli_query($connection,$sql_query);
           if($query_result)
@@ -52,7 +56,6 @@
           }
           else{
             echo('<script>alert("Message is not sent !!'.mysqli_error($connection).' !")</script>');
-            echo mysqli_error($connection);
           }
 
         }
@@ -61,7 +64,6 @@
         }
 
 
-        
 
     }
 

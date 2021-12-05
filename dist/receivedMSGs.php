@@ -26,28 +26,19 @@
             $EMessaeg_Key= base64_decode($query_result['msg_key']);
             $EMessaeg_IV= base64_decode($query_result['msg_iv']);
 
+            //To translate privatekey.pem file to readable file by openssl library 
             $userPrivateKey = openssl_pkey_get_private($userPrivateKey);
+
+            //Decrypt the message key key($EMessaeg_Key) and store it in $Messaeg_Key by using the recevier private Key ($userPrivateKey)
             openssl_private_decrypt($EMessaeg_Key,$Messaeg_Key, $userPrivateKey,OPENSSL_PKCS1_PADDING);
             openssl_private_decrypt($EMessaeg_IV,$Messaeg_IV, $userPrivateKey,OPENSSL_PKCS1_PADDING);
             
             
             $decrypted_message = openssl_decrypt($EncryptedMessage, $TypeOfcipher, $Messaeg_Key, 0, $Messaeg_IV);
-            
-            //echo('<script>alert("DONE'.mysqli_error($connection).' !")</script>');
         }else{
             echo('<script>alert("Can not find user'.mysqli_error($connection).' !")</script>');
         }
-
-            /*echo $EMessaeg_Key;
-            echo "AFTER ENCRYPT".$Messaeg_Key;
-            echo $EMessaeg_IV;
-            echo "AFTER ENCRYPT".$Messaeg_IV;*/
     }
-
-    //if(isset($_POST['deletebutton']))
-    //{}
-
-
 ?>
 
 <!DOCTYPE>
@@ -101,8 +92,6 @@
                         <tr>
                             <th>Sender name</th>
                             <th>Message content</th>
-                           <!-- <th>Message key</th> -->
-                            <!-- <th>Message IV key</th>-->
                         </tr>
                       <?php
                         $sql_query = "SELECT * FROM user_messages WHERE username='$username'";
@@ -115,9 +104,6 @@
                             echo "<tr>";
                             echo "<td>".$rows['msg_from']."</td>";
                             echo "<td>".$rows['user_message']."</td>";
-                          //  echo "<td><button id='deletebutton'name=\"".$rows['id']."\"><span>Delete</span></button></td>";
-                            //echo "<td>".$rows['msg_key']."</td>";
-                            //echo "<td>".$rows['msg_iv']."</td>";
                             echo "</tr>";
                           }
                         }
@@ -145,4 +131,3 @@
 
     </body>
 </html>
-<!-- echo ('<script>alert("selected user ='.$send_to_user .'\n The message='. $User_message .'!!")</script>') ; -->

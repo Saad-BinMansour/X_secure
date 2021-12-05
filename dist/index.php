@@ -6,29 +6,30 @@
 
   INDEX_is_loggedIn($connection);
 
-  $UserExistErr=false;
-  $passwordNOTmatch=false;
 
   $errorMSG="";
 
   //If POST method is for Register Form 
   if(isset($_POST['Register_btn']))
   {
+    //Get user inforamtion form the form.
     $username=$_POST['Register_Uname'];
     $Password=$_POST['Register_Password'];
     $ConfirmPassword=$_POST['Register_ConfirmPassword'];
 
+    //check if user Password and user confirm password is match 
     if($Password== $ConfirmPassword)
     {
       $sql_query = "SELECT * FROM users WHERE username='$username'";
       $query_result= mysqli_query($connection,$sql_query);
 
+      //check if the user already exists 
       if($query_result && mysqli_num_rows($query_result)>0)
       {
-        $errorMSG="USER ALREADY EXISTS!!";
-        //$UserExistErr=true;    
+        $errorMSG="USER ALREADY EXISTS!!";   
       }else{
 
+        //if 
         $Password= password_hash($Password, PASSWORD_DEFAULT);
         $sql_query = "INSERT INTO users (username, password) VALUES ('$username', '$Password')";
         $query_result= mysqli_query($connection,$sql_query);
@@ -45,8 +46,7 @@
         }
       }
     } else{
-      $errorMSG="THR PASSWORD CONFIRMATION DOES NOT MATCH!!";
-      //$passwordNOTmatch=true;
+      $errorMSG="THE PASSWORD CONFIRMATION DOES NOT MATCH!!";
     }
   }
 
@@ -71,12 +71,10 @@
       }else
       {
         $errorMSG="PASSWORD IS NOT CORRECT!!";
-        //echo('<script>alert("Password is not correct!!!")</script>');
       }
       
     }else{
       $errorMSG="USER IS NOT REGISTERD!!";
-      //echo('<script>alert("User is not valid!!")</script>');
     }
   }
 
